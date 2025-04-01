@@ -1,5 +1,8 @@
+from cropFigure import cropFigure
 from PIL import Image
 import numpy as np
+from math import inf
+
 
 # Маркировка фигур
 def CheckCell(width, height, x, y, matrix, c):
@@ -48,14 +51,22 @@ def CenterOfMassSpeed(width, height, matrix, index_figure):
     X = sum(x_list) / len(x_list)
     Y = sum(y_list) / len(y_list)
     return (round(X,2),round(Y,2))
+
+
+
+def PerimeterInaccurate(width, height, matrix, index_figure):
+    return 0
+
+def PerimeterAccurate(width, height, matrix, index_figure):
+    return 0
     
     
 
-image = Image.open('1input.png').convert('L')
+image = Image.open('input.png').convert('L')
 image_array = np.array(image)
 binary_matrix = (image_array < 128).astype(int)
 
-print(binary_matrix)
+# print(binary_matrix)
 
 height = len(binary_matrix)
 width = len(binary_matrix[0])
@@ -70,7 +81,6 @@ for i in range(height):
             counter += 1
             CheckCell(width, height, j, i, binary_matrix, counter)
 
-print(binary_matrix)
 print(f'Кол-во фигур {counter - 1}')
 
 for s in range(2, counter + 1):
@@ -80,3 +90,6 @@ for s in range(2, counter + 1):
     print(f'Центр масс фигуры (точный подход): {CenterOfMassAccurate(width, height, binary_matrix, s)}')
     print(f'Центр масс фигуры (быстрый подход): {CenterOfMassSpeed(width, height, binary_matrix, s)}')
 
+fragment = cropFigure(width, height, binary_matrix, 4)
+for i in range(len(fragment)):
+    print(fragment[i])

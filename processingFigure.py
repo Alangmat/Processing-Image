@@ -1,3 +1,16 @@
+# Маркировка фигур
+def checkCell(width, height, x, y, matrix, c):
+    if matrix[y][x] == 1:
+        matrix[y][x] = c
+        if x + 1 < width:
+            checkCell(width, height, x + 1, y, matrix, c)
+        if y + 1 < height:
+            checkCell(width, height, x, y + 1, matrix, c)
+        if x - 1 >= 0:
+            checkCell(width, height, x - 1, y, matrix, c)
+        if y - 1 >= 0:
+            checkCell(width, height, x, y - 1, matrix, c) 
+
 def cropFigure(width, height, matrix, index_figure):
     fragment = []
     x_list = set()

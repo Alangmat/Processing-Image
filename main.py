@@ -1,22 +1,9 @@
-from cropFigure import cropFigure
+from processingFigure import cropFigure, checkCell
 from PIL import Image
 import numpy as np
 from math import inf, sqrt
 
-
-# Маркировка фигур
-def CheckCell(width, height, x, y, matrix, c):
-    if matrix[y][x] == 1:
-        matrix[y][x] = c
-        if x + 1 < width:
-            CheckCell(width, height, x + 1, y, matrix, c)
-        if y + 1 < height:
-            CheckCell(width, height, x, y + 1, matrix, c)
-        if x - 1 >= 0:
-            CheckCell(width, height, x - 1, y, matrix, c)
-        if y - 1 >= 0:
-            CheckCell(width, height, x, y - 1, matrix, c) 
-
+# Площадь фигуры по индексу
 def SFigure(width, height, matrix, index_figure):
     s = 0
     for y in range(height):
@@ -28,6 +15,7 @@ def SFigure(width, height, matrix, index_figure):
     else:
         return 0
 
+# Центр масс фигуры по индексу (точный метод)
 def CenterOfMassAccurate(width, height, matrix, index_figure):
     x_list = []
     y_list = []
@@ -40,6 +28,7 @@ def CenterOfMassAccurate(width, height, matrix, index_figure):
     Y = sum(y_list) / len(y_list)
     return (round(X,2),round(Y,2))
 
+# Центр масс фигуры по индексу (быстрый метод)
 def CenterOfMassSpeed(width, height, matrix, index_figure):
     x_list = set()
     y_list = set()
@@ -52,8 +41,7 @@ def CenterOfMassSpeed(width, height, matrix, index_figure):
     Y = sum(y_list) / len(y_list)
     return (round(X,2),round(Y,2))
 
-
-
+# Периметр фигуры по индексу (быстрый метод)
 def PerimeterInaccurate(width, height, matrix, index_figure):
     fragmentWithFigure = cropFigure(width, height, matrix, index_figure)
     perimetr = 0
@@ -70,6 +58,7 @@ def PerimeterInaccurate(width, height, matrix, index_figure):
                     perimetr += 1
     return perimetr
 
+# Периметр фигуры по индексу (точный метод)
 def PerimeterAccurate(width, height, matrix, index_figure):
     fragmentWithFigure = cropFigure(width, height, matrix, index_figure)
     perimetr = 0
@@ -95,14 +84,16 @@ def PerimeterAccurate(width, height, matrix, index_figure):
     perimetr = perimetr + m * sqrt(2)
     return perimetr
 
-    
+def coefficientRoundness(s, p):
+    return p**2 / s
     
 
+# ####################################################
+# ############## Основной блок кода ##################
+# ####################################################
 image = Image.open('input.png').convert('L')
 image_array = np.array(image)
 binary_matrix = (image_array < 128).astype(int)
-
-# print(binary_matrix)
 
 height = len(binary_matrix)
 width = len(binary_matrix[0])
@@ -115,19 +106,20 @@ for i in range(height):
     for j in range(width):
         if binary_matrix[i][j] == 1:
             counter += 1
-            CheckCell(width, height, j, i, binary_matrix, counter)
+            checkCell(width, height, j, i, binary_matrix, counter)
 
 print(f'Кол-во фигур {counter - 1}')
 
 for s in range(2, counter + 1):
+    sFig = SFigure(width, height, binary_matrix, s)
+    pFig = PerimeterAccurate(width, height, binary_matrix, s)
     print("==============================")
     print(f'Индекс фигуры: {s}')
-    print(f'Площадь фигуры: {SFigure(width, height, binary_matrix, s)}')
+    print(f'Площадь фигуры: {sFig}')
     print(f'Центр масс фигуры (точный подход): {CenterOfMassAccurate(width, height, binary_matrix, s)}')
     print(f'Центр масс фигуры (быстрый подход): {CenterOfMassSpeed(width, height, binary_matrix, s)}')
     print(f'Периметр фигуры (быстрый способ): {PerimeterInaccurate(width, height, binary_matrix, s)}')
-    print(f'Периметр фигуры (точный способ): {PerimeterAccurate(width, height, binary_matrix, s)}')
+    print(f'Периметр фигуры (точный способ): {pFig}')
+    print(f'Коэффициент округлости: {coefficientRoundness(sFig, pFig)}')
 
-# fragment = cropFigure(width, height, binary_matrix, 3)
-# for i in range(len(fragment)):
-#     print(fragment[i])
+

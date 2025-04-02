@@ -19,7 +19,7 @@ def cropFigure(width, height, matrix, index_figure):
         for x in range(minW, maxW + 1):
             if int(matrix[y][x]) == index_figure:
                 row.append('*')
-            else: row.append('0')
+            else: row.append(0)
         fragment.append(row)
     
     return fragment

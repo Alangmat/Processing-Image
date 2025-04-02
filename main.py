@@ -55,7 +55,20 @@ def CenterOfMassSpeed(width, height, matrix, index_figure):
 
 
 def PerimeterInaccurate(width, height, matrix, index_figure):
-    return 0
+    fragmentWithFigure = cropFigure(width, height, matrix, index_figure)
+    perimetr = 0
+    for y in range(1, len(fragmentWithFigure) - 1):
+        for x in range(1, len(fragmentWithFigure[y]) - 1):
+            if fragmentWithFigure[y][x] == '*':
+                if fragmentWithFigure[y - 1][x] == 0:
+                    perimetr += 1
+                if fragmentWithFigure[y + 1][x] == 0:
+                    perimetr += 1
+                if fragmentWithFigure[y][x - 1] == 0:
+                    perimetr += 1
+                if fragmentWithFigure[y][x + 1] == 0:
+                    perimetr += 1
+    return perimetr
 
 def PerimeterAccurate(width, height, matrix, index_figure):
     return 0
@@ -89,6 +102,7 @@ for s in range(2, counter + 1):
     print(f'Площадь фигуры: {SFigure(width, height, binary_matrix, s)}')
     print(f'Центр масс фигуры (точный подход): {CenterOfMassAccurate(width, height, binary_matrix, s)}')
     print(f'Центр масс фигуры (быстрый подход): {CenterOfMassSpeed(width, height, binary_matrix, s)}')
+    print(f'Периметр фигуры (быстрый способ): {PerimeterInaccurate(width, height, binary_matrix, s)}')
 
 fragment = cropFigure(width, height, binary_matrix, 4)
 for i in range(len(fragment)):

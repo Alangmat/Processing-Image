@@ -1,7 +1,7 @@
 from cropFigure import cropFigure
 from PIL import Image
 import numpy as np
-from math import inf
+from math import inf, sqrt
 
 
 # Маркировка фигур
@@ -71,7 +71,30 @@ def PerimeterInaccurate(width, height, matrix, index_figure):
     return perimetr
 
 def PerimeterAccurate(width, height, matrix, index_figure):
-    return 0
+    fragmentWithFigure = cropFigure(width, height, matrix, index_figure)
+    perimetr = 0
+    m = 0
+    for y in range(1, len(fragmentWithFigure) - 1):
+        for x in range(1, len(fragmentWithFigure[y]) - 1):
+            if fragmentWithFigure[y][x] == '*':
+                if fragmentWithFigure[y - 1][x] != '*':
+                    fragmentWithFigure[y - 1][x] += 1
+                if fragmentWithFigure[y + 1][x] != '*':
+                    fragmentWithFigure[y + 1][x] += 1
+                if fragmentWithFigure[y][x - 1] != '*':
+                    fragmentWithFigure[y][x - 1] += 1
+                if fragmentWithFigure[y][x + 1] != '*':
+                    fragmentWithFigure[y][x + 1] += 1
+    for y in range(len(fragmentWithFigure)):
+        for x in range(len(fragmentWithFigure[y])):
+            if fragmentWithFigure[y][x] != '*':
+                if fragmentWithFigure[y][x] == 2:
+                    m += 1
+                else:
+                    perimetr += fragmentWithFigure[y][x]
+    perimetr = perimetr + m * sqrt(2)
+    return perimetr
+
     
     
 
@@ -103,7 +126,8 @@ for s in range(2, counter + 1):
     print(f'Центр масс фигуры (точный подход): {CenterOfMassAccurate(width, height, binary_matrix, s)}')
     print(f'Центр масс фигуры (быстрый подход): {CenterOfMassSpeed(width, height, binary_matrix, s)}')
     print(f'Периметр фигуры (быстрый способ): {PerimeterInaccurate(width, height, binary_matrix, s)}')
+    print(f'Периметр фигуры (точный способ): {PerimeterAccurate(width, height, binary_matrix, s)}')
 
-fragment = cropFigure(width, height, binary_matrix, 4)
-for i in range(len(fragment)):
-    print(fragment[i])
+# fragment = cropFigure(width, height, binary_matrix, 3)
+# for i in range(len(fragment)):
+#     print(fragment[i])

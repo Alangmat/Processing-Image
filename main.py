@@ -102,24 +102,84 @@ print(height, width)
 
 counter = 1
 
+# ####################################################
+# ############## Маркировка рекурсия  ################
+# ####################################################
+
 for i in range(height):
     for j in range(width):
         if binary_matrix[i][j] == 1:
             counter += 1
             checkCell(width, height, j, i, binary_matrix, counter)
 
-print(f'Кол-во фигур {counter - 1}')
+
+# ####################################################
+# ############## Маркировка построчно ################
+# ####################################################
+
+# def rowCheckCell(j, i, binary_matrix, arr):
+#     global counter
+#     leftCell = binary_matrix[i][j - 1]
+#     topCell = binary_matrix[i - 1][j]
+#     if topCell != 0:
+#         binary_matrix[i][j] = topCell
+#         if leftCell != 0 and leftCell != topCell and int(leftCell) not in arr[topCell - 1]:
+#             arr[topCell - 1].append(int(leftCell))
+#     elif leftCell != 0:
+#         binary_matrix[i][j] = leftCell
+#     else:
+#         counter += 1
+#         binary_matrix[i][j] = counter
+#         arr.append([counter])
+    
+# def swapValue(arr, value, newValue):
+#     for i in range(len(arr)):
+#         for j in range(len(arr[i])):
+#             if arr[i][j] == value:
+#                 arr[i][j] = newValue
+#                 if j > 0:
+#                     if arr[i][j - 1] == arr[i][j]:
+#                         arr[i].pop(j)
+
+# def finishMarking(binary_matrix, arr):
+#     global counter
+#     for current_value in range(counter, 1, -1):
+#         print("=====================")
+#         print(current_value)
+#         print(arr)
+#         print(binary_matrix)
+#         for j in range(len(arr) - 1, 0, -1):
+#             if isinstance(arr[j], list):
+#                 if len(arr[j]) == 1:
+#                     arr.pop(j)
+#                     continue
+#                 for k in range(len(arr[j]) - 1, 0, -1):
+#                     if arr[j][k] == current_value and arr[j][k] != arr[j][k-1]:
+#                         new_value = arr[j][k-1]
+#                         swapValue(arr, current_value, new_value)
+#                         binary_matrix[binary_matrix == current_value] = new_value
+
+# arr = [[1]]
+# for i in range(1, height - 1):
+#     for j in range(1, width - 1):
+#         if binary_matrix[i][j] == 1:
+#             rowCheckCell(j,i, binary_matrix, arr)
+# finishMarking(binary_matrix, arr)
+
+# print(binary_matrix)
+# print(f'Кол-во фигур {counter - 1}')
 
 for s in range(2, counter + 1):
-    sFig = SFigure(width, height, binary_matrix, s)
-    pFig = PerimeterAccurate(width, height, binary_matrix, s)
-    print("==============================")
-    print(f'Индекс фигуры: {s}')
-    print(f'Площадь фигуры: {sFig}')
-    print(f'Центр масс фигуры (точный подход): {CenterOfMassAccurate(width, height, binary_matrix, s)}')
-    print(f'Центр масс фигуры (быстрый подход): {CenterOfMassSpeed(width, height, binary_matrix, s)}')
-    print(f'Периметр фигуры (быстрый способ): {PerimeterInaccurate(width, height, binary_matrix, s)}')
-    print(f'Периметр фигуры (точный способ): {pFig}')
-    print(f'Коэффициент округлости: {coefficientRoundness(sFig, pFig)}')
+    if s in binary_matrix:
+        sFig = SFigure(width, height, binary_matrix, s)
+        pFig = PerimeterAccurate(width, height, binary_matrix, s)
+        print("==============================")
+        print(f'Индекс фигуры: {s}')
+        print(f'Площадь фигуры: {sFig}')
+        print(f'Центр масс фигуры (точный подход): {CenterOfMassAccurate(width, height, binary_matrix, s)}')
+        print(f'Центр масс фигуры (быстрый подход): {CenterOfMassSpeed(width, height, binary_matrix, s)}')
+        print(f'Периметр фигуры (быстрый способ): {PerimeterInaccurate(width, height, binary_matrix, s)}')
+        print(f'Периметр фигуры (точный способ): {pFig}')
+        print(f'Коэффициент округлости: {coefficientRoundness(sFig, pFig)}')
 
 

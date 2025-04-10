@@ -1,4 +1,5 @@
 # Маркировка фигур
+
 def checkCell(width, height, x, y, matrix, c):
     if matrix[y][x] == 1:
         matrix[y][x] = c
